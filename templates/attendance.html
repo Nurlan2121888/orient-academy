@@ -1,0 +1,648 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Davamiyyət - {{ lesson.title }}
+{% endblock %}
+
+{% block page_title %}
+    Davamiyyət
+{% endblock %}
+
+{% block extra_css %}
+<style>
+
+    .attendance-page {
+        width: 100%;
+    }
+
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        margin-bottom: 14px;
+
+        color: var(--text-secondary);
+
+        font-size: 12px;
+        font-weight: 600;
+
+        transition:
+            color 180ms ease,
+            transform 180ms ease;
+    }
+
+    .back-link:hover {
+        color: var(--primary);
+        transform: translateX(-2px);
+    }
+
+    .page-header h1 {
+        margin-bottom: 6px;
+
+        font-size: 26px;
+        font-weight: 700;
+
+        letter-spacing: -0.6px;
+    }
+
+    .page-header p {
+        color: var(--text-secondary);
+        font-size: 13px;
+    }
+
+    .lesson-summary {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+        margin-top: 14px;
+    }
+
+    .summary-item {
+        padding: 7px 10px;
+
+        background: var(--surface);
+
+        border: 1px solid var(--border);
+        border-radius: 8px;
+
+        color: var(--text-secondary);
+
+        font-size: 10px;
+    }
+
+    .summary-item strong {
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    .attendance-card {
+        background: var(--surface);
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+
+        box-shadow: var(--shadow-sm);
+
+        overflow: hidden;
+
+        animation: attendanceEnter 400ms ease both;
+    }
+
+    .attendance-header {
+        min-height: 64px;
+
+        padding: 0 22px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        border-bottom: 1px solid var(--border);
+    }
+
+    .attendance-header h2 {
+        font-size: 15px;
+        font-weight: 650;
+    }
+
+    .attendance-count {
+        color: var(--text-muted);
+        font-size: 11px;
+    }
+
+    .students-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .student-row {
+        min-height: 68px;
+
+        padding: 11px 22px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 13px;
+
+        border-bottom: 1px solid var(--border);
+
+        transition:
+            background 180ms ease;
+    }
+
+    .student-row:last-child {
+        border-bottom: 0;
+    }
+
+    .student-row:hover {
+        background: var(--surface-soft);
+    }
+
+    .student-avatar {
+        width: 38px;
+        height: 38px;
+
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: var(--primary-soft);
+        color: var(--primary);
+
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .student-info {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .student-name {
+        margin-bottom: 3px;
+
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .student-contact {
+        color: var(--text-muted);
+        font-size: 10px;
+    }
+
+    .attendance-control {
+        position: relative;
+
+        flex-shrink: 0;
+    }
+
+    .attendance-control input {
+        position: absolute;
+
+        opacity: 0;
+
+        pointer-events: none;
+    }
+
+    .attendance-label {
+        min-width: 116px;
+        min-height: 36px;
+
+        padding: 0 11px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 7px;
+
+        border: 1px solid var(--border);
+        border-radius: 8px;
+
+        background: #ffffff;
+
+        color: var(--text-secondary);
+
+        font-size: 10px;
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition:
+            background 180ms ease,
+            color 180ms ease,
+            border-color 180ms ease,
+            box-shadow 180ms ease;
+    }
+
+    .attendance-label:hover {
+        border-color: #cfd5df;
+        background: var(--surface-soft);
+    }
+
+    .attendance-dot {
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+
+        background: #b8bec8;
+
+        transition:
+            background 180ms ease,
+            transform 180ms ease;
+    }
+
+    .attendance-control input:checked + .attendance-label {
+        background: #edf9f0;
+        border-color: #c8e8d0;
+        color: #22863a;
+    }
+
+    .attendance-control input:checked + .attendance-label .attendance-dot {
+        background: #2da44e;
+        transform: scale(1.15);
+    }
+
+    .attendance-control input:focus-visible + .attendance-label {
+        box-shadow:
+            0 0 0 3px rgba(49, 94, 251, 0.1);
+    }
+
+    .attendance-footer {
+        padding: 18px 22px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        background: var(--surface-soft);
+
+        border-top: 1px solid var(--border);
+    }
+
+    .attendance-note {
+        color: var(--text-muted);
+        font-size: 10px;
+    }
+
+    .attendance-button {
+        min-height: 40px;
+
+        padding: 0 16px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 7px;
+
+        border-radius: 8px;
+
+        background: var(--primary);
+        color: #ffffff;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 5px 12px rgba(49, 94, 251, 0.16);
+
+        transition:
+            background 180ms ease,
+            transform 180ms ease,
+            box-shadow 180ms ease;
+    }
+
+    .attendance-button:hover {
+        background: var(--primary-hover);
+
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 7px 16px rgba(49, 94, 251, 0.22);
+    }
+
+    .attendance-button:active {
+        transform: translateY(0);
+    }
+
+    .empty-state {
+        padding: 60px 22px;
+
+        text-align: center;
+    }
+
+    .empty-icon {
+        width: 48px;
+        height: 48px;
+
+        margin: 0 auto 13px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 13px;
+
+        background: var(--surface-soft);
+        color: var(--text-muted);
+
+        font-size: 20px;
+    }
+
+    .empty-state h2 {
+        margin-bottom: 6px;
+
+        font-size: 15px;
+        font-weight: 650;
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 11px;
+    }
+
+    @keyframes attendanceEnter {
+
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    }
+
+    @media (max-width: 650px) {
+
+        .page-header h1 {
+            font-size: 22px;
+        }
+
+        .student-row {
+            padding: 11px 14px;
+        }
+
+        .attendance-header {
+            padding: 0 14px;
+        }
+
+        .attendance-footer {
+            padding: 15px 14px;
+
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .attendance-button {
+            width: 100%;
+        }
+
+        .attendance-note {
+            text-align: center;
+        }
+
+        .attendance-label {
+            min-width: 36px;
+            width: 36px;
+            padding: 0;
+        }
+
+        .attendance-label span:not(.attendance-dot) {
+            display: none;
+        }
+
+    }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="attendance-page">
+
+
+    <div class="page-header">
+
+        <a
+            href="{% url 'group_detail' group.id %}"
+            class="back-link"
+        >
+            ← {{ group.name }}
+        </a>
+
+
+        <h1>
+            Davamiyyət
+        </h1>
+
+
+        <p>
+            Tələbələrin dərsdə iştirak vəziyyətini qeyd edin.
+        </p>
+
+
+        <div class="lesson-summary">
+
+            <div class="summary-item">
+
+                Dərs:
+                <strong>
+                    {{ lesson.title }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                Tarix:
+                <strong>
+                    {{ lesson.lesson_date|date:"d.m.Y" }}
+                </strong>
+
+            </div>
+
+
+            {% if lesson.start_time %}
+
+                <div class="summary-item">
+
+                    Saat:
+                    <strong>
+
+                        {{ lesson.start_time }}
+
+                        {% if lesson.end_time %}
+                            - {{ lesson.end_time }}
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="attendance-card">
+
+
+        {% if students %}
+
+            <div class="attendance-header">
+
+                <h2>
+                    Tələbələr
+                </h2>
+
+                <span class="attendance-count">
+                    {{ students.count }} nəfər
+                </span>
+
+            </div>
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="students-list">
+
+                    {% for student in students %}
+
+                        <div class="student-row">
+
+
+                            <div class="student-avatar">
+
+                                {{ student.first_name|first|upper }}{{ student.last_name|first|upper }}
+
+                            </div>
+
+
+                            <div class="student-info">
+
+                                <div class="student-name">
+
+                                    {{ student.first_name }}
+                                    {{ student.last_name }}
+
+                                </div>
+
+
+                                <div class="student-contact">
+
+                                    {% if student.email %}
+                                        {{ student.email }}
+
+                                    {% elif student.phone %}
+                                        {{ student.phone }}
+
+                                    {% else %}
+                                        Əlaqə məlumatı yoxdur
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="attendance-control">
+
+                                <input
+                                    type="checkbox"
+                                    id="student_{{ student.id }}"
+                                    name="student_{{ student.id }}"
+                                    {% if student.attendance_status == "present" %}
+                                        checked
+                                    {% endif %}
+                                >
+
+
+                                <label
+                                    for="student_{{ student.id }}"
+                                    class="attendance-label"
+                                >
+
+                                    <span class="attendance-dot"></span>
+
+                                    <span>
+
+                                        {% if student.attendance_status == "present" %}
+                                            İştirak edib
+                                        {% else %}
+                                            İştirak etməyib
+                                        {% endif %}
+
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="attendance-footer">
+
+                    <a
+                        href="{% url 'group_detail' group.id %}"
+                        class="back-group-button"
+                    >
+                        ← Qrup detallarına qayıt
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="attendance-button"
+                    >
+                        Davamiyyəti yadda saxla
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+
+            </form>
+
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    ○
+                </div>
+
+                <h2>
+                    Tələbə yoxdur
+                </h2>
+
+                <p>
+                    Bu qrupda davamiyyət qeyd etmək üçün tələbə yoxdur.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+    </div>
+
+</div>
+
+{% endblock %}

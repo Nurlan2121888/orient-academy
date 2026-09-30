@@ -1,0 +1,492 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Qruplar - Orient Academy
+{% endblock %}
+
+{% block page_title %}
+    Qruplar
+{% endblock %}
+
+{% block extra_css %}
+<style>
+
+    .page-header {
+        margin-bottom: 26px;
+    }
+
+    .page-header h1 {
+        margin-bottom: 6px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.6px;
+    }
+
+    .page-header p {
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+
+    .groups-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+
+    .group-card {
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+
+        min-height: 245px;
+
+        padding: 22px;
+
+        background: var(--surface);
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+
+        box-shadow: var(--shadow-sm);
+
+        overflow: hidden;
+
+        transition:
+            transform 180ms ease,
+            box-shadow 180ms ease,
+            border-color 180ms ease;
+
+        animation: groupCardEnter 450ms ease both;
+    }
+
+
+    .group-card:nth-child(2) {
+        animation-delay: 60ms;
+    }
+
+    .group-card:nth-child(3) {
+        animation-delay: 120ms;
+    }
+
+    .group-card:nth-child(4) {
+        animation-delay: 180ms;
+    }
+
+    .group-card:nth-child(5) {
+        animation-delay: 240ms;
+    }
+
+    .group-card:nth-child(6) {
+        animation-delay: 300ms;
+    }
+
+
+    .group-card:hover {
+        transform: translateY(-4px);
+
+        border-color: #dce1ea;
+
+        box-shadow: var(--shadow);
+    }
+
+
+    .group-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        margin-bottom: 20px;
+    }
+
+
+    .group-icon {
+        width: 46px;
+        height: 46px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background: var(--primary-soft);
+        color: var(--primary);
+
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+
+    .group-status {
+        padding: 5px 9px;
+
+        border-radius: 20px;
+
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+
+    .group-status.active {
+        background: #edf9f0;
+        color: #22863a;
+    }
+
+
+    .group-status.closed {
+        background: #f1f2f4;
+        color: #737984;
+    }
+
+
+    .group-card h2 {
+        margin-bottom: 7px;
+
+        font-size: 16px;
+        font-weight: 650;
+
+        letter-spacing: -0.2px;
+    }
+
+
+    .group-student-count {
+        color: var(--text-secondary);
+
+        font-size: 12px;
+    }
+
+
+    .group-details {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 12px;
+
+        margin-top: auto;
+        padding-top: 20px;
+    }
+
+
+    .group-detail {
+        padding: 12px;
+
+        background: var(--surface-soft);
+
+        border-radius: 9px;
+    }
+
+
+    .group-detail span {
+        display: block;
+
+        margin-bottom: 4px;
+
+        color: var(--text-muted);
+
+        font-size: 9px;
+        font-weight: 600;
+
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+
+    .group-detail strong {
+        color: var(--text);
+
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+
+    .group-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        margin-top: 18px;
+        padding-top: 15px;
+
+        border-top: 1px solid var(--border);
+    }
+
+
+    .view-group {
+        color: var(--primary);
+
+        font-size: 12px;
+        font-weight: 600;
+
+        transition:
+            color 180ms ease;
+    }
+
+
+    .group-card:hover .view-group {
+        color: var(--primary-hover);
+    }
+
+
+    .view-arrow {
+        color: var(--text-muted);
+
+        font-size: 17px;
+
+        transition:
+            transform 180ms ease,
+            color 180ms ease;
+    }
+
+
+    .group-card:hover .view-arrow {
+        color: var(--primary);
+        transform: translateX(4px);
+    }
+
+
+    .empty-groups {
+        padding: 70px 24px;
+
+        background: var(--surface);
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+
+        box-shadow: var(--shadow-sm);
+
+        text-align: center;
+    }
+
+
+    .empty-groups-icon {
+        width: 54px;
+        height: 54px;
+
+        margin: 0 auto 16px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 14px;
+
+        background: var(--surface-soft);
+
+        color: var(--text-muted);
+
+        font-size: 21px;
+    }
+
+
+    .empty-groups h2 {
+        margin-bottom: 7px;
+
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .empty-groups p {
+        color: var(--text-secondary);
+
+        font-size: 12px;
+    }
+
+
+    @keyframes groupCardEnter {
+
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    }
+
+
+    @media (max-width: 1100px) {
+
+        .groups-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+    }
+
+
+    @media (max-width: 650px) {
+
+        .groups-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .page-header h1 {
+            font-size: 22px;
+        }
+
+
+        .group-card {
+            min-height: 230px;
+        }
+
+    }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="page-header">
+
+        <h1>
+            Qruplarım
+        </h1>
+
+        <p>
+            Tədris etdiyiniz qruplara ümumi baxış
+        </p>
+
+    </div>
+
+
+    {% if groups %}
+
+        <div class="groups-grid">
+
+            {% for group in groups %}
+
+                <a
+                    href="{% url 'group_detail' group.id %}"
+                    class="group-card"
+                >
+
+                    <div class="group-card-top">
+
+                        <div class="group-icon">
+                            {{ group.name|first|upper }}
+                        </div>
+
+
+                        {% if group.is_active %}
+
+                            <span class="group-status active">
+                                Aktiv
+                            </span>
+
+                        {% else %}
+
+                            <span class="group-status closed">
+                                Bağlanıb
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <h2>
+                        {{ group.name }}
+                    </h2>
+
+
+                    <p class="group-student-count">
+
+                        {% with count=group.students.count %}
+
+                            {{ count }}
+
+                            {% if count == 1 %}
+                                tələbə
+                            {% else %}
+                                tələbə
+                            {% endif %}
+
+                        {% endwith %}
+
+                    </p>
+
+
+                    <div class="group-details">
+
+                        <div class="group-detail">
+
+                            <span>
+                                Başlanğıc
+                            </span>
+
+                            <strong>
+                                {{ group.start_date|date:"d.m.Y" }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="group-detail">
+
+                            <span>
+                                Bitmə
+                            </span>
+
+                            <strong>
+
+                                {% if group.end_date %}
+                                    {{ group.end_date|date:"d.m.Y" }}
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="group-footer">
+
+                        <span class="view-group">
+                            Qrupa bax
+                        </span>
+
+                        <span class="view-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-groups">
+
+            <div class="empty-groups-icon">
+                ◫
+            </div>
+
+            <h2>
+                Hələ qrup yoxdur
+            </h2>
+
+            <p>
+                Sizə təyin edilmiş qruplar burada görünəcək.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}

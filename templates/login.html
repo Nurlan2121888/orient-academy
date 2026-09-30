@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Giriş | Orient Academy
+    </title>
+
+    <style>
+
+        :root {
+            --bg: #f5f7fb;
+            --surface: #ffffff;
+
+            --text: #171a21;
+            --text-secondary: #6f7785;
+            --text-muted: #9aa1ad;
+
+            --border: #e8ebf0;
+
+            --primary: #315efb;
+            --primary-hover: #254bd4;
+            --primary-soft: #eef2ff;
+
+            --danger: #d7353f;
+
+            --radius: 12px;
+
+            --transition:
+                180ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+
+            box-sizing: border-box;
+        }
+
+
+        body {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 24px;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #eef2ff 0,
+                    transparent 32%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            -webkit-font-smoothing: antialiased;
+        }
+
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 420px;
+
+            animation: loginEnter 450ms ease both;
+        }
+
+
+        .login-brand {
+            margin-bottom: 28px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        .brand-mark {
+            width: 52px;
+            height: 52px;
+
+            margin-bottom: 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background: var(--primary);
+            color: #ffffff;
+
+            font-size: 16px;
+            font-weight: 800;
+
+            letter-spacing: -0.5px;
+
+            box-shadow:
+                0 9px 22px rgba(49, 94, 251, 0.22);
+        }
+
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 750;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        .brand-subtitle {
+            margin-top: 4px;
+
+            color: var(--text-muted);
+
+            font-size: 9px;
+            font-weight: 650;
+
+            letter-spacing: 2px;
+        }
+
+
+        .login-card {
+            padding: 32px;
+
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 18px 45px rgba(16, 24, 40, 0.07);
+        }
+
+
+        .login-heading {
+            margin-bottom: 26px;
+        }
+
+
+        .login-heading h1 {
+            font-size: 22px;
+            font-weight: 700;
+
+            letter-spacing: -0.4px;
+        }
+
+
+        .login-heading p {
+            margin-top: 7px;
+
+            color: var(--text-secondary);
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        .error-message {
+            margin-bottom: 20px;
+
+            padding: 11px 13px;
+
+            border: 1px solid rgba(215, 53, 63, 0.12);
+
+            border-radius: 8px;
+
+            background: #fff0f0;
+
+            color: var(--danger);
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+
+        .form-label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: var(--text);
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+
+        .input-wrapper {
+            position: relative;
+        }
+
+
+        .input-icon {
+            position: absolute;
+
+            left: 13px;
+            top: 50%;
+
+            width: 17px;
+            height: 17px;
+
+            transform: translateY(-50%);
+
+            color: var(--text-muted);
+
+            pointer-events: none;
+        }
+
+
+        .input-icon svg {
+            width: 100%;
+            height: 100%;
+
+            fill: none;
+
+            stroke: currentColor;
+
+            stroke-width: 1.7;
+
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+
+        .form-control {
+            width: 100%;
+
+            height: 44px;
+
+            padding:
+                0 13px 0 40px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 8px;
+
+            outline: none;
+
+            background: #ffffff;
+
+            color: var(--text);
+
+            font-size: 12px;
+
+            transition:
+                border-color var(--transition),
+                box-shadow var(--transition);
+        }
+
+
+        .form-control::placeholder {
+            color: #b1b7c1;
+        }
+
+
+        .form-control:hover {
+            border-color: #d7dce5;
+        }
+
+
+        .form-control:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px rgba(49, 94, 251, 0.08);
+        }
+
+
+        .login-button {
+            width: 100%;
+
+            height: 44px;
+
+            margin-top: 7px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            border: 0;
+
+            border-radius: 8px;
+
+            background: var(--primary);
+            color: #ffffff;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 6px 14px rgba(49, 94, 251, 0.17);
+
+            transition:
+                background var(--transition),
+                transform var(--transition),
+                box-shadow var(--transition);
+        }
+
+
+        .login-button:hover {
+            background: var(--primary-hover);
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 8px 18px rgba(49, 94, 251, 0.23);
+        }
+
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+
+        .login-button svg {
+            width: 16px;
+            height: 16px;
+
+            fill: none;
+
+            stroke: currentColor;
+
+            stroke-width: 1.8;
+
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+
+        .login-footer {
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+        }
+
+
+        @keyframes loginEnter {
+
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 16px;
+            }
+
+
+            .login-card {
+                padding: 24px 20px;
+            }
+
+
+            .login-brand {
+                margin-bottom: 22px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-wrapper">
+
+
+    <div class="login-brand">
+
+        <div class="brand-mark">
+            OA
+        </div>
+
+        <div class="brand-name">
+            ORIENT
+        </div>
+
+        <div class="brand-subtitle">
+            ACADEMY
+        </div>
+
+    </div>
+
+
+    <div class="login-card">
+
+
+        <div class="login-heading">
+
+            <h1>
+                Müəllim girişi
+            </h1>
+
+            <p>
+                Hesabınıza daxil olaraq idarəetmə panelinə keçin.
+            </p>
+
+        </div>
+
+
+        {% if form.errors %}
+
+            <div class="error-message">
+                Username və ya şifrə yanlışdır. Zəhmət olmasa məlumatları yenidən yoxlayın.
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label
+                    for="username"
+                    class="form-label"
+                >
+                    Username
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <circle
+                                cx="12"
+                                cy="8"
+                                r="3.2"
+                            ></circle>
+
+                            <path
+                                d="M5.5 20c.7-3.5 2.9-5.2 6.5-5.2s5.8 1.7 6.5 5.2"
+                            ></path>
+
+                        </svg>
+
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="form-control"
+                        placeholder="Username daxil edin"
+                        autocomplete="username"
+                        required
+                        autofocus
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label
+                    for="password"
+                    class="form-label"
+                >
+                    Şifrə
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <rect
+                                x="5"
+                                y="10"
+                                width="14"
+                                height="10"
+                                rx="2"
+                            ></rect>
+
+                            <path
+                                d="M8 10V7a4 4 0 0 1 8 0v3"
+                            ></path>
+
+                        </svg>
+
+                    </span>
+
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Şifrənizi daxil edin"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+
+                Daxil ol
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="M5 12h13"
+                    ></path>
+
+                    <path
+                        d="M13 6l6 6-6 6"
+                    ></path>
+
+                </svg>
+
+            </button>
+
+
+        </form>
+
+
+        <div class="login-footer">
+            ORIENT ACADEMY · Müəllim paneli
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

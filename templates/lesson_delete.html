@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Dərsi sil - {{ lesson.title }}
+{% endblock %}
+
+{% block page_title %}
+    Dərsi sil
+{% endblock %}
+
+{% block extra_css %}
+<style>
+
+    .delete-page {
+        max-width: 620px;
+        margin: 45px auto 0;
+    }
+
+    .delete-card {
+        padding: 34px;
+
+        background: var(--surface);
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+
+        box-shadow: var(--shadow-sm);
+
+        text-align: center;
+
+        animation: deleteEnter 400ms ease both;
+    }
+
+    .delete-icon {
+        width: 58px;
+        height: 58px;
+
+        margin: 0 auto 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 16px;
+
+        background: var(--danger-soft);
+        color: var(--danger);
+
+        font-size: 25px;
+        font-weight: 500;
+    }
+
+    .delete-card h1 {
+        margin-bottom: 8px;
+
+        font-size: 21px;
+        font-weight: 700;
+
+        letter-spacing: -0.3px;
+    }
+
+    .delete-card > p {
+        max-width: 440px;
+
+        margin: 0 auto;
+
+        color: var(--text-secondary);
+
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .lesson-info {
+        margin: 24px 0;
+
+        padding: 16px;
+
+        background: var(--surface-soft);
+
+        border: 1px solid var(--border);
+
+        border-radius: 11px;
+
+        text-align: left;
+    }
+
+    .lesson-info-title {
+        margin-bottom: 7px;
+
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .lesson-info-meta {
+        color: var(--text-secondary);
+
+        font-size: 10px;
+        line-height: 1.6;
+    }
+
+    .warning {
+        margin-bottom: 24px;
+
+        padding: 11px 13px;
+
+        background: var(--danger-soft);
+
+        border-radius: 8px;
+
+        color: var(--danger);
+
+        font-size: 10px;
+        line-height: 1.5;
+    }
+
+    .delete-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 10px;
+    }
+
+    .cancel-button,
+    .delete-button {
+        min-height: 41px;
+
+        padding: 0 17px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition:
+            background 180ms ease,
+            color 180ms ease,
+            transform 180ms ease,
+            box-shadow 180ms ease;
+    }
+
+    .cancel-button {
+        background: var(--surface-soft);
+        color: var(--text-secondary);
+    }
+
+    .cancel-button:hover {
+        background: #eef0f4;
+        color: var(--text);
+    }
+
+    .delete-button {
+        background: var(--danger);
+        color: #ffffff;
+
+        box-shadow:
+            0 5px 12px rgba(229, 72, 77, 0.16);
+    }
+
+    .delete-button:hover {
+        background: #c9363d;
+
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 7px 16px rgba(229, 72, 77, 0.22);
+    }
+
+    .delete-button:active {
+        transform: translateY(0);
+    }
+
+    @keyframes deleteEnter {
+
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    }
+
+    @media (max-width: 600px) {
+
+        .delete-page {
+            margin-top: 20px;
+        }
+
+        .delete-card {
+            padding: 25px 20px;
+        }
+
+        .delete-actions {
+            flex-direction: column-reverse;
+        }
+
+        .cancel-button,
+        .delete-button {
+            width: 100%;
+        }
+
+    }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="delete-page">
+
+    <div class="delete-card">
+
+        <div class="delete-icon">
+            ×
+        </div>
+
+
+        <h1>
+            Dərsi silmək istəyirsiniz?
+        </h1>
+
+        <p>
+            Bu əməliyyat geri qaytarıla bilməz.
+            Dərslə bağlı saxlanılmış davamiyyət məlumatları da silinəcək.
+        </p>
+
+
+        <div class="lesson-info">
+
+            <div class="lesson-info-title">
+                {{ lesson.title }}
+            </div>
+
+            <div class="lesson-info-meta">
+
+                Qrup:
+                {{ group.name }}
+
+                <br>
+
+                Tarix:
+                {{ lesson.lesson_date|date:"d.m.Y" }}
+
+                {% if lesson.start_time %}
+
+                    <br>
+
+                    Saat:
+                    {{ lesson.start_time }}
+
+                    {% if lesson.end_time %}
+                        - {{ lesson.end_time }}
+                    {% endif %}
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="warning">
+            Bu dərsi sildikdən sonra onu geri qaytarmaq mümkün olmayacaq.
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="delete-actions">
+
+                <a
+                    href="{% url 'group_detail' group.id %}"
+                    class="cancel-button"
+                >
+                    Ləğv et
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="delete-button"
+                >
+                    Bəli, dərsi sil
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

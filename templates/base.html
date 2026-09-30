@@ -1,0 +1,258 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            Orient Academy
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'dashboard/css/base.css' %}"
+    >
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+
+<body>
+
+    <div class="app">
+
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-top">
+
+                <a
+                    href="{% url 'dashboard_home' %}"
+                    class="brand"
+                >
+
+                    <div class="brand-logo">
+                    <img
+                        src="{% static 'dashboard/images/orient-meta.png' %}"
+                        alt="Orient Academy"
+                    >
+                </div>
+
+                </a>
+
+
+                <button
+                    type="button"
+                    class="sidebar-close"
+                    id="sidebarClose"
+                    aria-label="Menyunu bağla"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <nav class="navigation">
+
+                <div class="nav-section">
+
+                    <span class="nav-label">
+                        MENYU
+                    </span>
+
+
+                    <a
+                        href="{% url 'dashboard_home' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'dashboard_home' %}active{% endif %}"
+                    >
+
+                        <span class="nav-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+                                <path d="M3 10.5L12 3l9 7.5"></path>
+
+                                <path d="M5.5 9.5V21h13V9.5"></path>
+
+                                <path d="M9.5 21v-6h5v6"></path>
+                            </svg>
+
+                        </span>
+
+
+                        <span>
+                            Əsas səhifə
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'groups' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'groups' or request.resolver_match.url_name == 'group_detail' %}active{% endif %}"
+                    >
+
+                        <span class="nav-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+
+                                <circle
+                                    cx="9"
+                                    cy="8"
+                                    r="3"
+                                ></circle>
+
+                                <circle
+                                    cx="17"
+                                    cy="9"
+                                    r="2.5"
+                                ></circle>
+
+                                <path
+                                    d="M3.5 20c.5-3.4 2.4-5 5.5-5s5 1.6 5.5 5"
+                                ></path>
+
+                                <path
+                                    d="M14 15.5c2.8-.8 5.5.5 6.5 4.5"
+                                ></path>
+
+                            </svg>
+
+                        </span>
+
+
+                        <span>
+                            Qruplar
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </nav>
+
+        </aside>
+
+
+        <div
+            class="sidebar-overlay"
+            id="sidebarOverlay"
+        ></div>
+
+
+        <main class="main">
+
+
+            <header class="topbar">
+
+
+                <button
+                    type="button"
+                    class="menu-button"
+                    id="menuButton"
+                    aria-label="Menyunu aç"
+                >
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </button>
+
+
+                <div class="topbar-title">
+
+                    {% block page_title %}
+                        Dashboard
+                    {% endblock %}
+
+                </div>
+
+
+                <a
+                    href="{% url 'profile' %}"
+                    class="topbar-profile"
+                >
+
+                    <div class="topbar-avatar">
+
+                        {{ user.first_name|first|default:user.username|first|upper }}
+
+                    </div>
+
+
+                    <div class="topbar-user">
+
+                        <strong>
+
+                            {% if user.first_name or user.last_name %}
+
+                                {{ user.first_name }}
+                                {{ user.last_name }}
+
+                            {% else %}
+
+                                {{ user.username }}
+
+                            {% endif %}
+
+                        </strong>
+
+
+                        <span>
+                            Müəllim
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+            </header>
+
+
+            <section class="content">
+
+                <div class="page-container">
+
+                    {% block content %}
+                    {% endblock %}
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+
+    </div>
+
+
+    <script src="{% static 'dashboard/js/app.js' %}"></script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>
