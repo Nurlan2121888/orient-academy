@@ -8,7 +8,9 @@ from .models import (
     Lesson,
     Attendance,
 )
-
+from django.core.mail import send_mail
+from django.contrib import messages
+from .forms import ContactForm
 
 class TeacherLoginView(LoginView):
 
@@ -361,3 +363,55 @@ def home(request):
         return redirect("dashboard_home")
 
     return redirect("login")
+
+def contact(request):
+
+    if request.method == "POST":
+
+        form = ContactForm(request.POST)
+
+        if form.is_valid():
+
+            name = form.cleaned_data["name"]
+            email = form.cleaned_data["email"]
+            message = form.cleaned_data["message"]
+
+            send_mail(
+                subject=f"Orient Academy Contact - {name}",
+
+                message=f"""
+Name: {name}
+Email: {email}
+
+Message:
+{message}
+""",
+
+                from_email=None,
+
+                recipient_list=[
+                    "SƏNİN_EMAILİN"
+                ],
+
+                reply_to=[
+                    email
+                ],
+            )
+
+            messages.success(
+                request,
+                "Your message has been sent successfully!"
+            )
+
+            return redirect("contact")
+
+    else:
+        form = ContactForm()
+
+    return render(
+        request,
+        "contact.html",
+        {
+            "form": form
+        }
+    )

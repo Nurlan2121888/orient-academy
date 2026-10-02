@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}
+Contact Us
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .contact-section {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #4d82d8, #42b8b5);
+    }
+
+    .contact-box {
+        width: 100%;
+        max-width: 450px;
+        background: white;
+        padding: 40px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .contact-box h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .contact-box input,
+    .contact-box textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+
+    .contact-box textarea {
+        resize: vertical;
+    }
+
+    .contact-box button {
+        display: block;
+        margin: 15px auto 0;
+        padding: 12px 32px;
+        border: none;
+        border-radius: 3px;
+        background: #2878d4;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .contact-box button:hover {
+        background: #1764bb;
+    }
+
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        border-radius: 3px;
+    }
+</style>
+
+<div class="contact-section">
+
+    <div class="contact-box">
+
+        <h2>Contact us</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="success-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.name }}
+
+            {{ form.email }}
+
+            {{ form.message }}
+
+            <button type="submit">
+                SEND
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
